@@ -1,7 +1,7 @@
 import React, { useState} from 'react'
 import Modal from 'react-bootstrap/Modal';
 import {Button} from 'react-bootstrap';
-//import Axios from 'axios'
+import Axios from 'axios'
 
 
 const CreatePost = ({show, handleClose}) => {
@@ -23,31 +23,28 @@ const CreatePost = ({show, handleClose}) => {
     }
 
      const savePost = async () => {
+
         try{
             console.log("request sent...")
-            const response = await fetch('http://localhost:8000/post/save', {
+            const response = await Axios.post('http://localhost:8000/post/save', {
 
-                method:'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    topic,
-                    description,
-                    postCategory,
-                })
+                topic,
+                description,
+                postCategory,
+                });
+               console.log('Post saved Successfuly', response.data);
+               handleClose();
                
-               
-            });
-            const data = await response.json();
-            console.log('Post saved Successfuly', data);
-
-            handleClose();
-        }
-        catch(error){
-            console.log('Error saving Post: ', error);
+            }catch(error){
+                console.log('Error saving Post: ', error);
+                
+            }
             
-        }
+           
+            
+            
+        
+        
     } 
 
 

@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {useState} from 'react'
 import {Link} from "react-router-dom"
 import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import CreatePost from '../CreatePost/CreatePost'
+import Axios from 'axios'
 
 
 const MyTable = () => {
 
-  const dummyData = [
+ /*  const dummyData = [
     {
       id: 1,
       topic: 'Mern STACK',
@@ -21,10 +22,22 @@ const MyTable = () => {
       description: 'Use for front-end Development',
       postCategory: 'Blog'
     },
-  ]
+  ] */
 
-  const [postdata,setpostdata] = useState(dummyData)
+  const [postdata,setpostdata] = useState([])
   const [modal, setModal] = useState(false);
+
+  useEffect(()=>{
+      const fetchData = async () => {
+        try{
+          const response = await Axios.get('http://localhost:8000/posts');
+          setpostdata(response.data);
+        }catch(error){
+          console.log("Error fetching data:", error);
+        }
+      };
+      fetchData();
+  },[])
 
   const handleClose =()=>{
     setModal(false);
