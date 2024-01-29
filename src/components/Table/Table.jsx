@@ -25,6 +25,10 @@ const MyTable = () => {
 
   const [postdata,setpostdata] = useState(dummyData)
   const [modal, setModal] = useState(false);
+
+  const handleClose =()=>{
+    setModal(false);
+  }
   return (
     <div className="container align-items-center justify-content-center">
       <div className="card">
@@ -64,7 +68,7 @@ const MyTable = () => {
 
         </div>
       </div>
-      <CreatePost show={modal}  />
+      <CreatePost show={modal}  handleClose={()=>handleClose()}/>
     </div>
   )
 }

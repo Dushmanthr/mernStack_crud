@@ -1,39 +1,81 @@
-import React, {useState} from 'react'
+import React, { useState} from 'react'
 import Modal from 'react-bootstrap/Modal';
 import {Button} from 'react-bootstrap';
-import Axios from 'axios'
+//import Axios from 'axios'
+
 
 const CreatePost = ({show, handleClose}) => {
-    const [post, setpost] = useState()
+    const [topic, setTopic] = useState()
+    const [description, setDescription] = useState()
+    const [postCategory, setPostCategory] = useState()
 
     const handleInput = (e)=>{
-        const
+        const {name,value} = e.target
+        if(name === 'topic'){
+            setTopic(value);
+        }
+        else if(name === 'description'){
+            setDescription(value);
+        }
+        else if(name === 'post_category'){
+            setPostCategory(value);
+        }
     }
+
+     const savePost = async () => {
+        try{
+            console.log("request sent...")
+            const response = await fetch('http://localhost:8000/post/save', {
+
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    topic,
+                    description,
+                    postCategory,
+                })
+               
+               
+            });
+            const data = await response.json();
+            console.log('Post saved Successfuly', data);
+
+            handleClose();
+        }
+        catch(error){
+            console.log('Error saving Post: ', error);
+            
+        }
+    } 
+
+
   return (
     <Modal show={show} onHide={handleClose} centered>
         <Modal.Header>
             <Modal.Title>Create Post</Modal.Title>
         </Modal.Header> 
         <Modal.Body>
-            <form className="createPost">
+            <form onSubmit={savePost} className="createPost">
                 <div className="form-group">
                     <label>Topic</label>
-                    <input type="text" name="topic" onChange = {handleInput} className='form-control'/>
+                    <input type="text" name="topic" value = {topic} onChange = {handleInput} className='form-control'/>
                 </div>
                 <div className="form-group">
                     <label>Description</label>
-                    <textarea name="description" onChange = {handleInput} className='form-control'/>
+                    <textarea name="description" value = {description} onChange = {handleInput} className='form-control'/>
                 </div>
                 <div className="form-group">
                     <label>Post Category</label>
-                    <input type="text" name= "post_category" onChange = {handleInput} className='form-control'/>
+                    <input type="text" name= "post_category" value = {postCategory} onChange = {handleInput} className='form-control'/>
                 </div>
                 
             </form>  
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="primary mt-2 " size="md" className="create ">Create</Button>
-            <Button varient="secondary mt-2" size="md" className="close" onClick={handleClose}>Close</Button>
+            <Button variant="primary mt-2 " size="md" className="create " onClick={savePost}>Create</Button>
+            <Button variant="secondary mt-2" size="md" className="close" onClick={handleClose}>Close</Button>
         </Modal.Footer>
     </Modal>
   )
